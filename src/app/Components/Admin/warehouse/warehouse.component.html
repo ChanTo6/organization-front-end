@@ -1,0 +1,142 @@
+<p-dialog header="Update Employee" [(visible)]="displayDialog" modal="modal" [style]="{ width: '50vw' }" [baseZIndex]="10000">
+  <form *ngIf="selectedEmployee" (ngSubmit)="saveEmployee()" #employeeForm="ngForm">
+    <div class="p-fluid">
+      <input type="hidden" [(ngModel)]="selectedEmployee.personId" name="personId" />
+      <div class="p-field">
+        <label for="employeeName">Name</label>
+        <input id="employeeName" type="text" pInputText [(ngModel)]="selectedEmployee.employeeName" name="employeeName" required />
+        <small *ngIf="employeeForm.submitted && !selectedEmployee.employeeName" class="p-error">Name is required.</small>
+      </div>
+      <div class="p-field">
+        <label for="employeeSurname">Surname</label>
+        <input id="employeeSurname" type="text" pInputText [(ngModel)]="selectedEmployee.employeeSurname" name="employeeSurname" required />
+        <small *ngIf="employeeForm.submitted && !selectedEmployee.employeeSurname" class="p-error">Surname is required.</small>
+      </div>
+      <div class="p-field">
+        <label for="password">Password</label>
+        <input id="password" type="password" pInputText [(ngModel)]="selectedEmployee.password" name="password" required />
+        <small *ngIf="employeeForm.submitted && !selectedEmployee.password" class="p-error">Password is required.</small>
+      </div>
+      <div class="p-field">
+        <label for="role">Role</label>
+        <p-dropdown id="role" [options]="roles" [(ngModel)]="selectedEmployee.role" name="role" required></p-dropdown>
+        <small *ngIf="employeeForm.submitted && !selectedEmployee.role" class="p-error">Role is required.</small>
+      </div>
+      <div class="p-field">
+        <label for="telephone">User Telephone</label>
+        <input id="telephone" type="text" pInputText [(ngModel)]="selectedEmployee.telephone" name="telephone" required />
+        <small *ngIf="employeeForm.submitted && !selectedEmployee.telephone" class="p-error">Telephone is required.</small>
+      </div>
+      <div class="p-field">
+        <label for="orgName">Organization Name</label>
+        <p-dropdown
+        id="orgName"
+        [options]="organizationNames"
+        [(ngModel)]="selectedEmployee.orgName"
+        name="orgName"
+        required
+        placeholder="Select an Organization">
+      </p-dropdown>
+      
+        <small *ngIf="employeeForm.submitted && !selectedEmployee.orgName" class="p-error">Organization name is required.</small>
+      </div>
+    </div>
+    <p-footer>
+      <button type="submit" pButton label="Save"></button>
+      <button type="button" pButton label="Cancel" (click)="onCancel()"></button>
+    </p-footer>
+  </form>
+</p-dialog>
+
+<p-table
+  #dt
+  [value]="employees"
+  dataKey="userId"
+  [rows]="10"
+  [rowsPerPageOptions]="[10, 25, 50]"
+  [loading]="loading"
+  [paginator]="true"
+  [globalFilterFields]="['employeeName', 'employeeSurname', 'orgName', 'orgEmail', 'orgTelephone', 'telephone', 'role']"
+  [tableStyle]="{ 'min-width': '75rem' }">
+
+  <ng-template pTemplate="header">
+    <tr>
+      <th style="width:15%">Name</th>
+      <th style="width:15%">Surname</th>
+      <th style="width:15%">Organization Name</th>
+      <th style="width:15%">Email</th>
+      <th style="width:15%">Organization Telephone</th>
+      <th style="width:15%">User Telephone</th>
+      <th style="width:10%">Role</th>
+      <th style="width:10%">Active</th> 
+      <th style="width:10%">Actions</th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-employee>
+    <tr>
+      <td>{{ employee.employeeName }}</td>
+      <td>{{ employee.employeeSurname }}</td>
+      <td>{{ employee.orgName }}</td>
+      <td>{{ employee.orgEmail }}</td>
+      <td>{{ employee.orgTelephone }}</td>
+      <td>{{ employee.telephone }}</td>
+      <td>{{ employee.role }}</td>
+      <td>{{ employee.isActive ? 'Active' : 'Inactive' }}</td> 
+      <td>
+        <button class="action-button update-button" (click)="onUpdate(employee)">
+          <span>Update</span>
+        </button>
+        <button class="action-button delete-button" (click)="onDelete(employee.userId)">
+          <span>Delete</span>
+        </button>
+      </td>
+    </tr>
+  </ng-template>
+  
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="9">No employees found.</td>
+    </tr>
+  </ng-template>
+</p-table>
+<button class="action-button add-button" (click)="onAdd()">
+  <span>Add Employee</span>
+</button>
+<button pButton type="button" label="გასვლა" icon="pi pi-power-off" class="p-button-danger logoff-button" (click)="logOff()" style="position: absolute; top: 10px; right: 10px;"></button>
+
+
+
+
+
+<p-dialog header="Register Employee" [(visible)]="displayRegisterDialog" [modal]="true" [closable]="false">
+  <div>
+    <label for="username">Username:</label>
+    <input id="username" [(ngModel)]="newUser.username" />
+    
+    <label for="password">Password:</label>
+    <input id="password" type="password" [(ngModel)]="newUser.password" />
+    
+    <label for="employeeName">First Name:</label>
+    <input id="employeeName" [(ngModel)]="newUser.employeeName" />
+    
+    <label for="employeeLastName">Last Name:</label>
+    <input id="employeeLastName" [(ngModel)]="newUser.employeeLastName" />
+    
+    <label for="organizationName">Organization Name:</label>
+    <p-dropdown [options]="organizationNames" [(ngModel)]="newUser.organizationName"></p-dropdown>
+    
+    <label for="email">Email:</label>
+    <input id="email" type="email" [(ngModel)]="newUser.email" />
+    
+    <label for="phoneNumber">Phone Number:</label>
+    <input id="phoneNumber" [(ngModel)]="newUser.phoneNumber" />
+    
+    <label for="role">Role:</label>
+    <p-dropdown [options]="roles" [(ngModel)]="newUser.role"></p-dropdown>
+  </div>
+  <p-footer>
+    <p-button label="Submit" (click)="registerEmployee()"></p-button>
+    <p-button label="Cancel" (click)="onCancel()"></p-button>
+  </p-footer>
+</p-dialog>

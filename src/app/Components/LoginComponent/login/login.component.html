@@ -1,0 +1,16 @@
+<div class="border">
+    <div class="authorizationregistration">
+      <p-button label="ავტორიზაცია"></p-button>
+      <p-button label="რეგისტრაცია" (click)="navigateToRegistration()"></p-button>
+    </div>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="namepassword">
+        <p>მომხმარებლის სახელი</p>
+        <input type="text" pInputText formControlName="username" />
+        <p>პაროლი</p>
+        <input type="password" pInputText formControlName="password" />
+        <p-button label="შესვლა" type="submit"></p-button>
+      </div>
+    </form>
+  </div>
+  
